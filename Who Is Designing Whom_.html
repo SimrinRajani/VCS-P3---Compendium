@@ -1,0 +1,538 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Who Is Designing Whom?</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&display=swap">
+<style>
+/* Layout: a workspace page. Title + properties, a collapsible essay, then the 15 entries as a database you can view as a board or a table; any entry opens in a side panel. One accent (electric blue), stepped down in strength per section. */
+:root {
+  --bg: #FFFFFF;
+  --fg: #1F1F1F;
+  --muted: #6E6E6E;
+  --faint: #A3A3A3;
+  --line: #E6E6E6;
+  --hover: #F1F1F1;
+  --col: #F6F6F6;
+  --card: #FFFFFF;
+  --shadow: 0 0 0 1px rgba(15,15,15,0.06), 0 2px 4px rgba(15,15,15,0.06);
+  --cover: #0A0A0A;
+  --red: #1F47FF;
+  --t0: rgba(31,71,255,0.30); --t1: rgba(31,71,255,0.20); --t2: rgba(31,71,255,0.12); --t3: rgba(31,71,255,0.06);
+  --tag-fg: #1430C2;
+  --scrim: rgba(15,15,15,0.18);
+  --sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --serif: "Newsreader", "Iowan Old Style", "Charter", Georgia, "Times New Roman", serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #191919; --fg: #D4D4D4; --muted: #9B9B9B; --faint: #6F6F6F; --line: #2F2F2F; --hover: #2A2A2A;
+    --col: #202020; --card: #252525; --shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 2px 4px rgba(0,0,0,0.3);
+    --cover: #0B0B0B; --tag-fg: #A9B8FF; --scrim: rgba(0,0,0,0.45);
+    --t0: rgba(31,71,255,0.42); --t1: rgba(31,71,255,0.30); --t2: rgba(31,71,255,0.20); --t3: rgba(31,71,255,0.11);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #191919; --fg: #D4D4D4; --muted: #9B9B9B; --faint: #6F6F6F; --line: #2F2F2F; --hover: #2A2A2A;
+  --col: #202020; --card: #252525; --shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 2px 4px rgba(0,0,0,0.3);
+  --cover: #0B0B0B; --tag-fg: #A9B8FF; --scrim: rgba(0,0,0,0.45);
+  --t0: rgba(31,71,255,0.42); --t1: rgba(31,71,255,0.30); --t2: rgba(31,71,255,0.20); --t3: rgba(31,71,255,0.11);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--sans); font-size: 16px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+
+.cover { height: clamp(96px, 14vw, 160px); background: var(--cover); position: relative; overflow: hidden; }
+.cover::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: var(--red); }
+.page { max-width: 900px; margin: 0 auto; padding-left: max(24px, env(safe-area-inset-left, 0px)); padding-right: max(24px, env(safe-area-inset-right, 0px)); padding-block: 0 24px; }
+.icon { width: 78px; height: 78px; margin-top: -42px; position: relative; background: var(--bg); border-radius: 6px; display: grid; place-items: center; font: 900 4.4rem/1 var(--serif); color: var(--fg); box-shadow: var(--shadow); padding-top: 0.42em; overflow: hidden; }
+h1 { margin: 40px 0 14px; font-size: clamp(2rem, 5vw, 2.6rem); line-height: 1.15; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+
+.props { display: grid; grid-template-columns: minmax(0, 10.5rem) minmax(0, 1fr); gap: 2px 8px; font-size: 0.92rem; margin-bottom: 18px; }
+.props dt { color: var(--muted); display: flex; align-items: flex-start; gap: 8px; padding: 5px 6px 5px 0; }
+.props dd { margin: 0; padding: 5px 6px; border-radius: 4px; min-width: 0; }
+.props svg { margin-top: 4px; width: 15px; height: 15px; flex: none; stroke: currentColor; fill: none; stroke-width: 1.6; }
+.chip { display: inline-block; padding: 0 6px; border-radius: 3px; font-size: 0.85rem; line-height: 1.5; background: var(--hover); white-space: nowrap; margin: 1px 4px 1px 0; }
+.tag { display: inline-block; padding: 0 6px; border-radius: 3px; font-size: 0.82rem; font-weight: 500; line-height: 1.55; color: var(--tag-fg); white-space: nowrap; }
+.t0 { background: var(--t0); } .t1 { background: var(--t1); } .t2 { background: var(--t2); } .t3 { background: var(--t3); }
+.stack { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.date { color: var(--fg); }
+.date b { color: var(--red); font-weight: 600; }
+
+.callout { margin: 10px 0 22px; padding: 22px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.callout p { margin: 0; font-family: var(--serif); font-weight: 300; font-size: clamp(1.25rem, 2.4vw, 1.55rem); line-height: 1.45; letter-spacing: -0.005em; max-width: 40ch; text-wrap: pretty; }
+
+details.toggle { margin: 6px 0; }
+details.toggle > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 6px; padding: 4px 6px 4px 2px; border-radius: 4px; font-weight: 600; font-size: 1.15rem; }
+details.toggle > summary::-webkit-details-marker { display: none; }
+details.toggle > summary:hover { background: var(--hover); }
+details.toggle > summary .tri { width: 20px; display: inline-grid; place-items: center; color: var(--muted); transition: transform 150ms ease; font-size: 0.75rem; }
+details.toggle[open] > summary .tri { transform: rotate(90deg); }
+details.toggle > summary .meta { font-weight: 400; font-size: 0.85rem; color: var(--muted); margin-left: 6px; }
+.tbody { padding: 6px 0 8px 28px; }
+.sec-h { font-size: 1.25rem; font-weight: 700; margin: 26px 0 4px; }
+.essay .sub { font-family: var(--sans); font-style: italic; color: var(--muted); font-size: 0.95rem; margin: 0 0 16px; }
+.essay .sub .meta { font-style: normal; color: var(--faint); font-size: 0.85rem; }
+.rchip { font-family: var(--sans); font-size: 0.72em; font-weight: 600; padding: 1px 5px; border-radius: 3px; background: var(--hover); color: var(--muted); white-space: nowrap; }
+.essay h3 { font-size: 1.05rem; margin: 22px 0 6px; display: flex; align-items: center; gap: 8px; }
+.essay h3:first-child { margin-top: 6px; }
+.essay p { margin: 0 0 14px; font-family: var(--serif); font-size: 1.1rem; line-height: 1.65; max-width: 66ch; }
+.ref { font-family: var(--sans); font-size: 0.72em; font-weight: 600; text-decoration: none; padding: 1px 5px; border-radius: 3px; background: var(--hover); white-space: nowrap; cursor: pointer; }
+.ref:hover { background: var(--t1); color: var(--tag-fg); }
+
+/* ---------- database ---------- */
+.db { max-width: 1400px; margin: 0 auto; padding-left: max(24px, env(safe-area-inset-left, 0px)); padding-right: max(24px, env(safe-area-inset-right, 0px)); padding-block: 8px 40px; }
+.db-head { max-width: 852px; margin: 0 auto; }
+.db-wide .db-head { max-width: none; }
+.db-title { font-size: 1.25rem; font-weight: 700; margin: 18px 0 8px; }
+.bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 4px; border-bottom: 1px solid var(--line); padding-bottom: 6px; }
+.view { appearance: none; border: 0; background: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; color: var(--muted); font-size: 0.9rem; display: inline-flex; align-items: center; gap: 6px; position: relative; }
+.view svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.6; }
+.view:hover { background: var(--hover); }
+.view[aria-pressed="true"] { color: var(--fg); font-weight: 600; }
+.view[aria-pressed="true"]::after { content: ""; position: absolute; left: 6px; right: 6px; bottom: -7px; height: 2px; background: var(--fg); }
+.spacer { flex: 1 1 auto; }
+.filter { display: inline-flex; align-items: center; gap: 6px; }
+.filter label { color: var(--muted); font-size: 0.85rem; }
+select, input[type="search"] { font: inherit; font-size: 0.88rem; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 4px 8px; }
+input[type="search"] { width: 190px; }
+.count { color: var(--muted); font-size: 0.85rem; padding: 0 4px; }
+
+.board-wrap { overflow-x: auto; padding: 14px 0 10px; }
+.board { display: grid; grid-template-columns: repeat(var(--cols, 4), minmax(260px, 1fr)); gap: 12px; min-width: min-content; }
+.col { background: var(--col); border-radius: 6px; padding: 8px; min-width: 0; align-self: start; }
+.col-head { display: flex; align-items: center; gap: 8px; padding: 2px 4px 8px; font-size: 0.88rem; }
+.col-head .n { color: var(--muted); }
+.col-focus { margin: -4px 4px 10px; font-size: 0.8rem; color: var(--muted); line-height: 1.35; }
+.cards { display: grid; gap: 8px; }
+.note { margin: 0 0 10px; background: var(--card); border-radius: 5px; box-shadow: var(--shadow); border-left: 3px solid var(--red); }
+.note summary { list-style: none; cursor: pointer; padding: 8px 10px; font-size: 0.82rem; font-weight: 600; display: flex; gap: 6px; align-items: baseline; }
+.note summary::-webkit-details-marker { display: none; }
+.note summary .k { color: var(--muted); font-weight: 400; }
+.note .tri { color: var(--muted); font-size: 0.65rem; transition: transform 150ms ease; display: inline-block; }
+.note[open] .tri { transform: rotate(90deg); }
+.note p { margin: 0; padding: 0 12px 12px; font-family: var(--serif); font-size: 0.9rem; line-height: 1.55; }
+.card { appearance: none; border: 0; text-align: left; width: 100%; background: var(--card); box-shadow: var(--shadow); border-radius: 5px; padding: 10px 11px; cursor: pointer; display: grid; gap: 7px; }
+.card:hover { background: var(--hover); }
+.card-title { font-weight: 600; font-size: 0.92rem; line-height: 1.3; }
+.card-title .no { color: var(--faint); font-weight: 500; margin-right: 4px; font-variant-numeric: tabular-nums; }
+.card-snip::before { content: "“"; } .card-snip::after { content: "”"; }
+.card-snip { font-family: var(--serif); font-weight: 400; font-size: 0.92rem; line-height: 1.45; color: var(--muted); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.card-props { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; font-size: 0.78rem; }
+.card-props .src { color: var(--fg); font-size: 0.78rem; }
+.card-props .chip { font-size: 0.76rem; }
+.who { color: var(--muted); font-size: 0.78rem; }
+.who b { color: var(--fg); font-weight: 500; }
+.empty { color: var(--faint); font-size: 0.85rem; padding: 6px 4px; }
+
+.table-wrap { overflow-x: auto; padding-top: 6px; }
+table { border-collapse: collapse; width: 100%; min-width: 860px; font-size: 0.88rem; }
+th, td { border-bottom: 1px solid var(--line); padding: 7px 8px; text-align: left; vertical-align: top; }
+th { color: var(--muted); font-weight: 500; font-size: 0.82rem; white-space: nowrap; }
+td + td, th + th { border-left: 1px solid var(--line); }
+tbody tr { cursor: pointer; }
+tbody tr:hover td { background: var(--hover); }
+td.num { color: var(--faint); font-variant-numeric: tabular-nums; width: 3rem; }
+td.tt { font-weight: 600; }
+
+/* the loop (interactive model) */
+.loop-sec { margin-top: 18px; }
+.loop-lede { color: var(--muted); font-size: 0.95rem; margin: 0 0 14px; max-width: 66ch; }
+.loop { display: grid; grid-template-columns: minmax(0, 18rem) minmax(0, 1fr); gap: 14px; }
+.lp-panel { background: var(--col); border-radius: 6px; padding: 14px; min-width: 0; }
+.lp-h { margin: 0 0 10px; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.sw { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; align-items: center; padding: 9px 0; border-top: 1px solid var(--line); cursor: pointer; }
+.sw:first-of-type { border-top: 0; }
+.sw b { font-size: 0.92rem; font-weight: 600; }
+.sw small { grid-column: 1; color: var(--muted); font-size: 0.8rem; line-height: 1.35; }
+.sw input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.tg { grid-column: 2; grid-row: 1 / span 2; width: 34px; height: 20px; border-radius: 10px; background: var(--faint); position: relative; transition: background 150ms ease; }
+.tg::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: #FFFFFF; transition: transform 150ms ease; }
+.sw input:checked + .tg { background: var(--red); }
+.sw input:checked + .tg::after { transform: translateX(14px); }
+.sw input:focus-visible + .tg { outline: 2px solid var(--red); outline-offset: 2px; }
+.sw.ask { animation: pulse 1.2s ease 2; }
+@keyframes pulse { 50% { background: var(--t2); } }
+.lp-actions { display: flex; gap: 8px; margin-top: 10px; }
+.btn2 { appearance: none; border: 1px solid var(--line); background: var(--bg); color: var(--fg); border-radius: 4px; padding: 5px 10px; font-size: 0.82rem; cursor: pointer; }
+.btn2:hover { background: var(--hover); }
+.btn2.pri { background: var(--red); border-color: var(--red); color: #FFFFFF; }
+.stage { position: relative; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.stage canvas { display: block; width: 100%; height: 260px; }
+.legend { position: absolute; left: 10px; top: 8px; display: flex; gap: 12px; font-size: 0.76rem; color: var(--muted); }
+.legend.r { left: 51%; }
+.legend i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; vertical-align: 0; }
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 10px; }
+.stat { background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; min-width: 0; }
+.stat span { display: block; font-size: 0.74rem; color: var(--muted); }
+.stat b { font-size: 1.35rem; font-weight: 650; font-variant-numeric: tabular-nums; }
+.stat.hi b { color: var(--red); }
+.ring { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 12px; font-size: 0.8rem; color: var(--muted); }
+.ring .st { padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); transition: background 200ms ease, color 200ms ease, border-color 200ms ease; }
+.ring .st.on { background: var(--red); border-color: var(--red); color: #FFFFFF; }
+.ring .ar { color: var(--faint); }
+.ask-box { margin-top: 12px; padding: 10px 12px; border-radius: 6px; background: var(--t3); border: 1px solid var(--t1); font-size: 0.88rem; }
+.ask-box p { margin: 0 0 8px; }
+.ask-box .who3 { font-weight: 600; }
+.lp-foot { margin: 10px 0 0; color: var(--faint); font-size: 0.78rem; }
+@media (max-width: 760px) {
+  .loop { grid-template-columns: minmax(0, 1fr); }
+  .stage canvas { height: 220px; }
+  .stat b { font-size: 1.1rem; }
+}
+
+/* ---------- side peek ---------- */
+.scrim { position: fixed; inset: 0; background: var(--scrim); z-index: 40; }
+.peek { position: fixed; top: 0; right: 0; bottom: 0; width: min(620px, 100vw); background: var(--bg); z-index: 41; box-shadow: -1px 0 0 var(--line), -12px 0 32px rgba(0,0,0,0.12);
+  display: flex; flex-direction: column; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); padding-right: env(safe-area-inset-right, 0px); }
+.peek-bar { display: flex; align-items: center; gap: 4px; padding: 8px 12px; border-bottom: 1px solid var(--line); }
+.ibtn { appearance: none; border: 0; background: none; border-radius: 4px; padding: 5px 8px; cursor: pointer; color: var(--muted); font-size: 0.85rem; }
+.ibtn:hover { background: var(--hover); color: var(--fg); }
+.ibtn:disabled { opacity: 0.35; cursor: default; background: none; }
+.peek-bar .pos { color: var(--faint); font-size: 0.82rem; margin-left: auto; font-variant-numeric: tabular-nums; }
+.peek-body { overflow-y: auto; padding: 22px clamp(18px, 4vw, 40px) 40px; }
+.peek h2 { margin: 2px 0 14px; font-size: 1.7rem; line-height: 1.2; }
+.peek h2 .no { color: var(--faint); font-weight: 500; margin-right: 6px; }
+.peek .props { grid-template-columns: minmax(0, 9rem) minmax(0, 1fr); margin-bottom: 22px; }
+.quote { margin: 4px 0 8px; padding: 0; font-family: var(--serif); font-weight: 300; font-size: clamp(1.3rem, 2.4vw, 1.55rem); line-height: 1.45; letter-spacing: -0.005em; text-wrap: pretty; }
+.quote::before { content: "“"; margin-left: -0.42em; }
+.quote::after { content: "”"; }
+.quote strong { font-weight: inherit; }
+.cite { font-size: 0.82rem; color: var(--muted); margin: 10px 0 0; }
+.peek h3 { font-size: 1.02rem; margin: 28px 0 10px; padding-top: 18px; border-top: 1px solid var(--line); }
+.msg { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 10px; margin-bottom: 16px; }
+.av { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-size: 0.8rem; font-weight: 700; background: var(--hover); color: var(--fg); }
+.av.r { background: var(--t0); color: var(--tag-fg); }
+.msg .who2 { font-weight: 600; font-size: 0.92rem; }
+.msg .who2 span { color: var(--faint); font-weight: 400; font-size: 0.8rem; margin-left: 6px; }
+.msg p { margin: 2px 0 0; font-family: var(--serif); font-size: 1rem; line-height: 1.6; }
+.msg.said p { color: var(--muted); font-style: italic; }
+.av.me { background: var(--red); color: #FFFFFF; }
+.mynote { margin-top: 30px; padding: 4px 16px 6px; background: var(--col); border-radius: 6px; }
+.mynote h3 { border-top: 0; padding-top: 10px; margin: 6px 0 4px; }
+.mn-k { margin: 0 0 14px; font-size: 0.82rem; color: var(--muted); }
+.has-note { justify-self: start; font-size: 0.74rem; font-weight: 600; color: var(--tag-fg); background: var(--t3); padding: 0 6px; border-radius: 3px; }
+
+@media (max-width: 640px) {
+  .props { grid-template-columns: minmax(0, 7.5rem) minmax(0, 1fr); }
+  .tbody { padding-left: 4px; }
+  details.toggle > summary { flex-wrap: wrap; }
+  details.toggle > summary .meta { flex-basis: 100%; margin-left: 26px; }
+  input[type="search"] { width: 100%; }
+  .bar .spacer { display: none; }
+  .filter-search { flex: 1 1 100%; }
+  .board { grid-template-columns: repeat(var(--cols, 4), minmax(250px, 82vw)); }
+}
+</style>
+
+<div class="cover" aria-hidden="true"></div>
+<main>
+<div class="page">
+  <h1>Who Is Designing Whom?</h1>
+  <dl class="props">
+    <dt><svg viewBox="0 0 16 16"><path d="M2 3h12v10H2z M2 6h12"/></svg>Course</dt><dd>Visual Culture Seminar · Parsons · Fall 2026</dd>
+    <dt><svg viewBox="0 0 16 16"><path d="M3 2h7l3 3v9H3z"/></svg>Project</dt><dd>Project 3 · Compendium</dd>
+    <dt><svg viewBox="0 0 16 16"><path d="M3 4h10M3 8h10M3 12h6"/></svg>Topic</dt><dd>How digital products shape the people who use them, and how the systems behind them shape the designers who make them.</dd>
+    <dt><svg viewBox="0 0 16 16"><path d="M3 3h3v3H3z M10 3h3v3h-3z M3 10h3v3H3z M10 10h3v3h-3z"/></svg>Sections</dt><dd class="stack"><span class="tag t0">01 We Shape Our Tools</span> <span class="tag t1">02 Our Tools Shape Us</span> <span class="tag t2">03 The Systems Behind the Screen</span> <span class="tag t3">04 Who Is Responsible?</span></dd>
+    <dt><svg viewBox="0 0 16 16"><path d="M5 3h8M5 8h8M5 13h8M2.5 3h0M2.5 8h0M2.5 13h0"/></svg>Contents</dt><dd>15 excerpts from course readings · 15 exchanges from the microresponses</dd>
+  </dl>
+
+
+  <section class="essay" aria-labelledby="essay-h">
+    <h2 class="sec-h" id="essay-h">Framing essay</h2>
+    <p class="sub">The relationship between design, technology, and the systems around us. <span class="meta">· 1147 words · cites 6 entries from this collection</span></p>
+    <p>As designers, we spend a lot of time thinking about how people interact with the things we create. We think about how to make products easier to use, how to guide people through an experience, and how design can influence the way someone understands or interacts with something. But I think we sometimes overlook how much the relationship goes both ways. We design the tools people use based on how they may interact with them, but those tools also shape how people think, behave, and make decisions. The more we rely on them, the more they start to influence the way we work and even the way we approach design itself. So who is really designing whom?</p><p>In <i>Are We Human? Notes on an Archaeology of Design</i>, Beatriz Colomina and Mark Wigley write that “Design always presents itself as serving the human but its real ambition is to redesign the human.” <a class="ref" data-ref href="#entry-01">No.&nbsp;01 · Colomina &amp; Wigley</a> I found this idea interesting because it challenges the assumption that design simply responds to existing needs. Human behavior is influenced by the environments we move through, the information we interact with, and the habits we develop. The things we create become part of those environments and can gradually change how we do things. Something might be designed to make a task easier, but over time it can change how people approach it. Design does not just solve problems; it also shapes what people come to expect.</p><p>We can see this happening right now with artificial intelligence. As AI becomes a bigger part of our everyday workflows, it is not just helping us create things faster. It is also changing how we approach the creative process and what we consider valuable as designers. In her Week 6 reflection, Charitaa considers how the idea of “good taste” is changing alongside AI. She writes that it may become “less about having a good visual eye and more about knowing what is actually building and what problems are worth solving.” <a class="ref" data-ref href="#entry-04">No.&nbsp;04 · Charitaa</a> When a tool can generate visual directions in seconds, making decisions and understanding why something should exist become even more important. But there is a difference between using a tool to support the process and letting it take over. In her Week 9 response, Valerie writes, “The opportunity for growth was robbed from you.” <a class="ref" data-ref href="#entry-12">No.&nbsp;12 · Valerie</a> This made me think about how much learning comes from uncertainty, mistakes, and figuring things out ourselves. AI can make parts of the process faster, but relying on it for every decision can mean missing the thinking that helps us develop as designers.</p><p>But our tools are not created in a vacuum. They are shaped by the companies, markets, economies, and cultures that surround them. What gets designed is often influenced by what is profitable, what attracts investment, and what companies believe people want. These priorities can be very different from what people actually need. In her Week 5 response, Charitaa refers to a distinction Juliette made between “design for sale and design for use.” She mentions Adobe and Instagram to show how adding features does not always make a product better. She also points out that Instagram has “lost its essence in designing itself for sale.” <a class="ref" data-ref href="#entry-09">No.&nbsp;09 · Charitaa</a> This shows how the goals behind a product can change the experience of using it. Andrea raises a related point in her Week 8 response, asking whether experiences are designed to help users or benefit a company. She brings up how Muse has a friendly AI mascot that makes people more comfortable sharing personal information. <a class="ref" data-ref href="#entry-13">No.&nbsp;13 · Andrea</a> Something that feels welcoming can also encourage people to share more than they otherwise would. Design decisions are shaped by business models, incentives, and the goals of the people creating the product.</p><p>This raises a bigger question about the responsibility designers have in shaping people’s experiences. If design can influence behavior, we have to think beyond whether something looks good or works as intended. Crystal explores this in her Week 1 response, pointing out that the same design skills used to create something helpful can also be used to “influence, manipulate, or potentially harm people depending on the intention behind them.” She gives the example of how a missing or misplaced button could prevent someone from accessing a potentially life-changing tool. <a class="ref" data-ref href="#entry-10">No.&nbsp;10 · Crystal</a> Connecting this to healthcare, I’ve seen how the way information is communicated can affect whether someone understands their options, feels comfortable asking questions, or knows what to do next. It made me realize that usability is not always just about convenience - it can determine whether someone can access the help they need. Being a responsible designer means considering what our decisions might make difficult, what they might encourage, and who could be left out.</p><p>At the same time, I don’t think design should only be approached through rules or a checklist of responsibilities. There is still room for curiosity, experimentation, and expression. In <i>Designing Design</i>, Kenya Hara describes design as “the energetic acknowledgement of our own living world through the making of things and through communication.” <a class="ref" data-ref href="#entry-03">No.&nbsp;03 · Hara</a> We are not creating in isolation. We are responding to the world around us, while also contributing to what that world becomes. I like this perspective because it brings design back to the relationship between people and the world around them. Design is not only about producing something functional or commercially successful. It is also a way of observing, interpreting, and responding to everyday life. The reading <i>Why A.I. Isn’t Going to Make Art</i> raises a related question about AI and authorship, pointing out that when an AI generates a design or story from a prompt, it must make all the choices that the person prompting it did not make. <a class="ref" data-ref href="#entry-04">No.&nbsp;04 · Chiang</a> A tool can generate an outcome based on a prompt, but the person using it still has to decide what matters, what feels meaningful, and what should be made. The creative process is shaped by our tools, but also by the judgment and intention we bring to them.</p><p>I found myself returning to this idea in one of my own responses during Week 1, when we discussed the influence designers have on the future. I wrote that “the usability of [a] product can influence the decisions and therefore influence the future of an individual person.” I also reflected on how a design decision made for one target audience can affect a much larger group of people and eventually ripple out to the wider population. <a class="ref" data-ref data-note href="#entry-10">No.&nbsp;10 · My note</a> Those effects can extend into larger systems and shape the expectations, biases and mental models that people have. I think this is what makes the question of who is designing whom so important. Design is never just about the object, interface, or experience in front of us. It is also about the behaviors it encourages, the systems it supports, and the people it affects. We shape the tools around us, but those tools continue to shape us in return.</p>
+  </section>
+</div>
+
+<section class="db" id="db" aria-labelledby="db-title">
+  <div class="db-head" id="db-head">
+    <h2 class="db-title" id="db-title">Entries</h2>
+    <div class="bar">
+      <button class="view" type="button" data-view="board" aria-pressed="true"><svg viewBox="0 0 16 16"><path d="M2 3h3.5v10H2z M6.5 3H10v7H6.5z M11 3h3v5h-3z"/></svg>Board</button>
+      <button class="view" type="button" data-view="table" aria-pressed="false"><svg viewBox="0 0 16 16"><path d="M2 3h12v10H2z M2 6.5h12 M2 10h12 M6 3v10"/></svg>Table</button>
+      <span class="spacer"></span>
+      <span class="filter"><label for="f-sec">Section</label>
+        <select id="f-sec"><option value="all">All</option><option value="0">01 We Shape Our Tools</option><option value="1">02 Our Tools Shape Us</option><option value="2">03 The Systems Behind the Screen</option><option value="3">04 Who Is Responsible?</option></select></span>
+      <span class="filter filter-search"><input type="search" id="f-q" placeholder="Search names, sources, text" aria-label="Search entries"></span>
+      <span class="count" id="count">15 entries</span>
+    </div>
+  </div>
+  <div id="views"></div>
+</section>
+
+<div class="page">
+  <section class="loop-sec" aria-labelledby="loop-h">
+    <h2 class="sec-h" id="loop-h">Try the loop</h2>
+    <p class="loop-lede">You are the designer. Each pattern below is common in real apps. Switch one on and watch 120 people change how they use the product. Then the product’s numbers come back to you, and the business asks for more.</p>
+    <div class="loop">
+      <div class="lp-panel">
+        <p class="lp-h">You design the tool</p>
+        <label class="sw" id="sw-scroll"><b>Infinite scroll</b><input type="checkbox" data-f="scroll"><span class="tg" aria-hidden="true"></span><small>The feed never ends, so there is no natural place to stop.</small></label>
+        <label class="sw" id="sw-auto"><b>Autoplay next</b><input type="checkbox" data-f="auto"><span class="tg" aria-hidden="true"></span><small>The next video starts before anyone decides to watch it.</small></label>
+        <label class="sw" id="sw-badge"><b>Red notification badges</b><input type="checkbox" data-f="badge"><span class="tg" aria-hidden="true"></span><small>A count that pulls people back in throughout the day.</small></label>
+        <label class="sw" id="sw-feed"><b>Engagement-ranked feed</b><input type="checkbox" data-f="feed"><span class="tg" aria-hidden="true"></span><small>The app chooses what people see next, based on what held them before.</small></label>
+        <div class="lp-actions"><button class="btn2" type="button" id="lp-reset">Reset</button></div>
+      </div>
+      <div class="lp-panel">
+        <p class="lp-h">The tool designs its users</p>
+        <div class="stage">
+          <canvas id="lp-canvas" aria-label="120 dots, one per person, colored by whether they are choosing or on autopilot"></canvas>
+          <div class="legend" aria-hidden="true"><span><i style="background:var(--faint)"></i>Choosing</span></div><div class="legend r" aria-hidden="true"><span><i style="background:var(--red)"></i>On autopilot</span></div>
+        </div>
+        <div class="stats" aria-live="polite">
+          <div class="stat hi"><span>On autopilot</span><b id="st-auto">12 of 120</b></div>
+          <div class="stat"><span>Avg. daily use</span><b id="st-time">22 min</b></div>
+          <div class="stat"><span>Times you pushed back</span><b id="st-push">0</b></div>
+        </div>
+        <div class="ring" aria-hidden="true">
+          <span class="st" data-st="0">You design</span><span class="ar">→</span>
+          <span class="st" data-st="1">The tool</span><span class="ar">→</span>
+          <span class="st" data-st="2">People’s habits</span><span class="ar">→</span>
+          <span class="st" data-st="3">Engagement data</span><span class="ar">→</span>
+          <span class="st" data-st="4">The business asks for more</span><span class="ar">↺</span>
+        </div>
+        <div class="ask-box" id="ask" hidden>
+          <p><span class="who3">Growth team:</span> <span id="ask-text"></span></p>
+          <div class="lp-actions" style="margin-top:0"><button class="btn2 pri" type="button" id="ask-yes">Ship it</button><button class="btn2" type="button" id="ask-no">Push back</button></div>
+        </div>
+        <p class="lp-foot">An illustrative model of the essay’s argument, not real data.</p>
+      </div>
+    </div>
+  </section>
+  <p class="cite" style="margin-top:28px">Excerpts were selected by classmates from the course readings. Each exchange pairs a comment made in class, as recorded by the classmate who responded, with that response. Everyone is credited by first name; […] marks a cut.</p>
+</div>
+</main>
+
+<div class="scrim" id="scrim" hidden></div>
+<aside class="peek" id="peek" hidden role="dialog" aria-modal="true" aria-labelledby="pk-title">
+  <div class="peek-bar">
+    <button class="ibtn" type="button" id="pk-close" aria-label="Close">✕ Close</button>
+    <button class="ibtn" type="button" id="pk-prev" aria-label="Previous entry">↑ Prev</button>
+    <button class="ibtn" type="button" id="pk-next" aria-label="Next entry">↓ Next</button>
+    <span class="pos" id="pk-pos"></span>
+  </div>
+  <div class="peek-body" id="pk-body"></div>
+</aside>
+
+<script>
+(function () {
+  var DATA = [{"n": "01", "sec": 0, "title": "Cause and effect", "author": "Beatriz Colomina & Mark Wigley", "work": "Are We Human?", "ex": "The human is permanently suspended between being the <strong>cause and effect<\/strong>, between designing living systems and <strong>being designed by them<\/strong>.", "exPlain": "The human is permanently suspended between being the cause and effect, between designing living systems and being designed by them.", "cite": "Colomina, Beatriz, and Mark Wigley. <i>Are We Human? Notes on an Archaeology of Design<\/i>. Zurich: Lars Müller Publishers, 2016.", "url": null, "by": "Charitaa", "spk": "Gia & the class", "wk": "Week 3", "said": "Everyone in the class also presented on how well the internet knows us and how much of an influence it has on our personality, shopping habits, daily life but had a very interesting moment because I think as a class everyone liked that the internet knew so much about them, which is different.", "rsp": "Matias", "resp": "I was expecting everyone to start closing off, but interestingly everyone seemed to have a positive general consensus about it because they had more personalized experiences with applications, and even someone said: “It knows me so well; it tells me how to shop.”", "search": "cause and effect the human is permanently suspended between being the cause and effect, between designing living systems and being designed by them. beatriz colomina & mark wigley are we human? charitaa gia & the class matias everyone in the class also presented on how well the internet knows us and how much of an influence it has on our personality, shopping habits, daily life but had a very interesting moment because i think as a class everyone liked that the internet knew so much about them, which is different. i was expecting everyone to start closing off, but interestingly everyone seemed to have a positive general consensus about it because they had more personalized experiences with applications, and even someone said: “it knows me so well; it tells me how to shop.”"}, {"n": "02", "sec": 0, "title": "Only as intentional as you are informed", "author": "Erika Hall", "work": "A Design Research Framework", "ex": "Design is the <strong>application of intention<\/strong>, and you are only as intentional as you are informed.", "exPlain": "Design is the application of intention, and you are only as intentional as you are informed.", "cite": "Hall, Erika. “A Design Research Framework.” Mule Design, October 25, 2022.", "url": "https://www.muledesign.com/blog/design-research-framework", "by": "Jasmine", "spk": "Juliette", "wk": "Week 2", "said": "Look for the part you don&#x27;t already know and if you wait for the right tools and spots what you want to do may never happen.", "rsp": "Natay", "resp": "The first is so important as a designer and goes along with the reading we had, A Design Research Framework. The reading explains you get the most out of something by asking questions. When you ask questions your brain filters for that information and it allows you to continue testing and discovering ultimately leading to a strong product. […] It reminds me to be an active participant in bringing my ideas to life instead of waiting for the perfect time or resources.", "search": "only as intentional as you are informed design is the application of intention, and you are only as intentional as you are informed. erika hall a design research framework jasmine juliette natay look for the part you don't already know and if you wait for the right tools and spots what you want to do may never happen. the first is so important as a designer and goes along with the reading we had, a design research framework. the reading explains you get the most out of something by asking questions. when you ask questions your brain filters for that information and it allows you to continue testing and discovering ultimately leading to a strong product. […] it reminds me to be an active participant in bringing my ideas to life instead of waiting for the perfect time or resources."}, {"n": "03", "sec": 0, "title": "Energetic acknowledgement", "author": "Kenya Hara", "work": "Designing Design", "ex": "Design is the <strong>energetic acknowledgement<\/strong> of our own living world through the making of things and through communication.", "exPlain": "Design is the energetic acknowledgement of our own living world through the making of things and through communication.", "cite": "Hara, Kenya. “What Is Design?” In <i>Designing Design<\/i>. Baden: Lars Müller Publishers, 2007.", "url": null, "by": "Gia", "spk": "Hyunjin", "wk": "Week 3", "said": "She pointed out that she agreed with someone else who said that designers solve everyday tasks, while artists tackle more intangible problems, such as socioeconomic and political issues.", "rsp": "Jun Hee", "resp": "I liked this discussion, as it really made me rethink the idea of defining ‘artist’ and ‘designer.’ During the discussion, I thought about how Hara is considered a designer because he follows Bauhaus principles, which were built on the idea that ‘form follows function.’ By the end of class, I came to my own conclusion: art serves itself, while design serves a function.", "search": "energetic acknowledgement design is the energetic acknowledgement of our own living world through the making of things and through communication. kenya hara designing design gia hyunjin jun hee she pointed out that she agreed with someone else who said that designers solve everyday tasks, while artists tackle more intangible problems, such as socioeconomic and political issues. i liked this discussion, as it really made me rethink the idea of defining ‘artist’ and ‘designer.’ during the discussion, i thought about how hara is considered a designer because he follows bauhaus principles, which were built on the idea that ‘form follows function.’ by the end of class, i came to my own conclusion: art serves itself, while design serves a function."}, {"n": "04", "sec": 0, "title": "A lot of choices", "author": "Ted Chiang", "work": "Why A.I. Isn’t Going to Make Art", "ex": "Art is notoriously hard to define, and so are the differences between good art and bad art. But let me offer a generalization: art is something that results from <strong>making a lot of choices<\/strong>.", "exPlain": "Art is notoriously hard to define, and so are the differences between good art and bad art. But let me offer a generalization: art is something that results from making a lot of choices.", "cite": "Chiang, Ted. “Why A.I. Isn’t Going to Make Art.” <i>The New Yorker<\/i>, August 31, 2024.", "url": "https://www.newyorker.com/culture/the-weekend-essay/why-ai-isnt-going-to-make-art", "by": "Fan", "spk": "Jonathan", "wk": "Week 6", "said": "“Taste becomes useful when it is informed by the product and the people using it.”", "rsp": "Charitaa", "resp": "This was a super interesting perspective on this because we often hear that since AI can do most things for us, our main job is going to be to use “our good taste” to determine the best outcome and let the machine “handle the rest”. But this made me think about how the concept of good taste is also going to evolve with the rest of the industry. Less about having a good visual eye and more about knowing what is actually building and what problems are worth solving. Taste becomes truly useful when it is informed by the context within which it must exist! Example: When you make 100 different prototypes using AI, knowing which versions actually help the target user would be my new definition of having “good taste”.", "search": "a lot of choices art is notoriously hard to define, and so are the differences between good art and bad art. but let me offer a generalization: art is something that results from making a lot of choices. ted chiang why a.i. isn’t going to make art fan jonathan charitaa “taste becomes useful when it is informed by the product and the people using it.” this was a super interesting perspective on this because we often hear that since ai can do most things for us, our main job is going to be to use “our good taste” to determine the best outcome and let the machine “handle the rest”. but this made me think about how the concept of good taste is also going to evolve with the rest of the industry. less about having a good visual eye and more about knowing what is actually building and what problems are worth solving. taste becomes truly useful when it is informed by the context within which it must exist! example: when you make 100 different prototypes using ai, knowing which versions actually help the target user would be my new definition of having “good taste”."}, {"n": "05", "sec": 1, "title": "The door you don’t notice", "author": "Don Norman", "work": "The Norman Door", "ex": "Ideal door is one that as I walk to it and walk through it I’m <strong>not even aware<\/strong> that I had opened the door and shuttered.", "exPlain": "Ideal door is one that as I walk to it and walk through it I’m not even aware that I had opened the door and shuttered.", "cite": "Don Norman, in Smithies Design. “The Norman Door: It’s Not You, Bad Doors Are Everywhere.” YouTube, May 3, 2018.", "url": "https://www.youtube.com/watch?v=fxT_Tdt8Q74", "by": "Jun Hee", "spk": "Juliette", "wk": "Week 2", "said": "People may admire a physical design, such as a book, when it is unique and creative. However, in digital design, such as a website, users may feel frustrated when familiar elements like buttons or hamburger menus work differently from what they expect.", "rsp": "Jasmine", "resp": "I found this interesting because my background is in graphic design. It reminded me of a type promotion book I designed, where I tried to be creative with how the book was viewed and packaged by using something unusual, and people were interested in exploring the design and spending time with it. However, I realized this works differently in user interface design, where being too creative with familiar elements may actually frustrate users.", "search": "the door you don’t notice ideal door is one that as i walk to it and walk through it i’m not even aware that i had opened the door and shuttered. don norman the norman door jun hee juliette jasmine people may admire a physical design, such as a book, when it is unique and creative. however, in digital design, such as a website, users may feel frustrated when familiar elements like buttons or hamburger menus work differently from what they expect. i found this interesting because my background is in graphic design. it reminded me of a type promotion book i designed, where i tried to be creative with how the book was viewed and packaged by using something unusual, and people were interested in exploring the design and spending time with it. however, i realized this works differently in user interface design, where being too creative with familiar elements may actually frustrate users."}, {"n": "06", "sec": 1, "title": "Attention as commodity", "author": "Sally Woellner", "work": "Dark Patterns", "ex": "Your <strong>attention<\/strong> is the most valuable commodity in our modern digital ecosystem. If they have your attention, if they keep you on the app or their website, they can gather more data about you. […] That’s why all of these companies are so desperate to get your time and attention.", "exPlain": "Your attention is the most valuable commodity in our modern digital ecosystem. If they have your attention, if they keep you on the app or their website, they can gather more data about you. […] That’s why all of these companies are so desperate to get your time and attention.", "cite": "Woellner, Sally. “Dark Patterns: How Design Seeks to Control Us.” TEDxSydney, November 2021.", "url": "https://www.ted.com/talks/sally_woellner_dark_patterns_how_design_seeks_to_control_us", "by": "Hannah", "spk": "Alaia", "wk": "Week 5", "said": "Chinese app Taobao is also have many contents on the platform and she described that is their tactics to user stay longer and interact longer inside the app.", "rsp": "Claire", "resp": "As a user of Chinese apps like Temu and Shein, I’ve always been curious about why they have so much content and endless pop-ups. My personal experience was that I usually felt overwhelmed by the heavy context, like Hannah said, which made me leave the app. However, it also makes sense that this is a deliberate design tactic to keep users on the app longer and encourage extra purchases.", "search": "attention as commodity your attention is the most valuable commodity in our modern digital ecosystem. if they have your attention, if they keep you on the app or their website, they can gather more data about you. […] that’s why all of these companies are so desperate to get your time and attention. sally woellner dark patterns hannah alaia claire chinese app taobao is also have many contents on the platform and she described that is their tactics to user stay longer and interact longer inside the app. as a user of chinese apps like temu and shein, i’ve always been curious about why they have so much content and endless pop-ups. my personal experience was that i usually felt overwhelmed by the heavy context, like hannah said, which made me leave the app. however, it also makes sense that this is a deliberate design tactic to keep users on the app longer and encourage extra purchases."}, {"n": "07", "sec": 1, "title": "A natural extension of ourselves", "author": "Rauno Freiberg", "work": "Invisible Details of Interaction Design", "ex": "Interaction design is an art form to make experiences that fluidly respond to human intent. […] Executing well on details like these makes products feel like a <strong>natural extension of ourselves<\/strong>.", "exPlain": "Interaction design is an art form to make experiences that fluidly respond to human intent. […] Executing well on details like these makes products feel like a natural extension of ourselves.", "cite": "Freiberg, Rauno. “Invisible Details of Interaction Design.” <i>Every<\/i>, July 17, 2023.", "url": "https://every.to/p/invisible-details-of-interaction-design", "by": "Gia", "spk": "Fan", "wk": "Week 3", "said": "About how they never walk-in to a restaurant without checking a google map reviews.", "rsp": "Hyunjin", "resp": "Her story about Google Maps reviews, and the way people now rely so heavily on Google Maps, got me thinking about whether this has anything to do with how afraid we’ve become of making mistakes or failing. […] Maybe these tools help us make fewer bad decisions, but at the same time, they might also be making us more afraid of making mistakes in the first place.", "search": "a natural extension of ourselves interaction design is an art form to make experiences that fluidly respond to human intent. […] executing well on details like these makes products feel like a natural extension of ourselves. rauno freiberg invisible details of interaction design gia fan hyunjin about how they never walk-in to a restaurant without checking a google map reviews. her story about google maps reviews, and the way people now rely so heavily on google maps, got me thinking about whether this has anything to do with how afraid we’ve become of making mistakes or failing. […] maybe these tools help us make fewer bad decisions, but at the same time, they might also be making us more afraid of making mistakes in the first place."}, {"n": "08", "sec": 1, "title": "Not tools, but extensions", "author": "Google", "work": "Building with M3 Expressive", "ex": "Today, people increasingly see their devices <strong>not as tools, but as extensions of themselves<\/strong>. Expressive interfaces have an emotional impact, fostering connection by evoking a feeling or mood through visual design and interaction.", "exPlain": "Today, people increasingly see their devices not as tools, but as extensions of themselves. Expressive interfaces have an emotional impact, fostering connection by evoking a feeling or mood through visual design and interaction.", "cite": "Google. “Building with M3 Expressive.” Material Design blog.", "url": "https://m3.material.io/blog/building-with-m3-expressive", "by": "Claire", "spk": "Jonathan", "wk": "Week 7", "said": "Many people prefer “AI girlfriends” over real girlfriends nowadays. This is because they agree to the things you say, you do not have to argue against them etc. – they feel just more convenient.", "rsp": "Felix", "resp": "The points that he makes are true and should be alarming to us as a society. Today the young generation feels as lonely as ever; a feeling driven by social media and one that will be accelerated by AI. The issue is that people do not look for real solutions, but rather for a quick fix to cure their symptoms, without thinking about the consequences.", "search": "not tools, but extensions today, people increasingly see their devices not as tools, but as extensions of themselves. expressive interfaces have an emotional impact, fostering connection by evoking a feeling or mood through visual design and interaction. google building with m3 expressive claire jonathan felix many people prefer “ai girlfriends” over real girlfriends nowadays. this is because they agree to the things you say, you do not have to argue against them etc. – they feel just more convenient. the points that he makes are true and should be alarming to us as a society. today the young generation feels as lonely as ever; a feeling driven by social media and one that will be accelerated by ai. the issue is that people do not look for real solutions, but rather for a quick fix to cure their symptoms, without thinking about the consequences."}, {"n": "09", "sec": 2, "title": "The wider context", "author": "Erika Hall", "work": "A Design Research Framework", "ex": "Focusing on “the user” exclusively is an easy way to <strong>forget about the wider context<\/strong> around that user. And that’s how you get ants, and a lot of otherwise well-meaning designers participating in unsustainable and unethical businesses.", "exPlain": "Focusing on “the user” exclusively is an easy way to forget about the wider context around that user. And that’s how you get ants, and a lot of otherwise well-meaning designers participating in unsustainable and unethical businesses.", "cite": "Hall, Erika. “A Design Research Framework.” Mule Design, October 25, 2022.", "url": "https://www.muledesign.com/blog/design-research-framework", "by": "Crystal", "spk": "Juliette", "wk": "Week 5", "said": "There’s design for sale and design for use.", "rsp": "Charitaa", "resp": "Juliette gave the example of Adobe with it’s multitude of features. And Valarie spoke about how technology has not grown on an exponential curve as we might have expected. Instead, we’re adding more features that are saturating and bloating the interface. This made me think about Apple and the annual release of new features and updates. Not everything actually helps the everyday experience better. […] Instagram is another example I thought of that had a niche and an objective and has now overloaded its platform with reels, stories, recommendations, ads, shopping, and more AI driven content. I feel that it’s lost its essence in designing itself for sale.", "search": "the wider context focusing on “the user” exclusively is an easy way to forget about the wider context around that user. and that’s how you get ants, and a lot of otherwise well-meaning designers participating in unsustainable and unethical businesses. erika hall a design research framework crystal juliette charitaa there’s design for sale and design for use. juliette gave the example of adobe with it’s multitude of features. and valarie spoke about how technology has not grown on an exponential curve as we might have expected. instead, we’re adding more features that are saturating and bloating the interface. this made me think about apple and the annual release of new features and updates. not everything actually helps the everyday experience better. […] instagram is another example i thought of that had a niche and an objective and has now overloaded its platform with reels, stories, recommendations, ads, shopping, and more ai driven content. i feel that it’s lost its essence in designing itself for sale."}, {"n": "10", "sec": 2, "title": "All that you touch you change", "author": "Octavia E. Butler", "work": "A Few Rules for Predicting the Future", "ex": "They may be too slight to matter or they may be worth the risk because the potential benefits are great, but <strong>the consequences are always there<\/strong>. In <i>Parable of the Sower<\/i>, my character put it this way: All that you touch / You Change / All that you Change / Changes you.", "exPlain": "They may be too slight to matter or they may be worth the risk because the potential benefits are great, but the consequences are always there. In Parable of the Sower, my character put it this way: All that you touch / You Change / All that you Change / Changes you.", "cite": "Butler, Octavia E. “A Few Rules for Predicting the Future.” <i>Essence<\/i>, May 2000. Republished by Common Good Collective.", "url": "https://commongood.cc/reader/a-few-rules-for-predicting-the-future-by-octavia-e-butler/", "by": "Linzhuo", "spk": "A classmate", "wk": "Week 1", "said": "They made a point about how the Nazis recruited the best designers for their campaigns to create campaigns that appealed to people and helped attract support. […] The student also mentioned how designers today shape user experiences and therefore have a responsibility to consider how the choices they make can influence people and their actions.", "rsp": "Crystal", "resp": "Relating to the excerpt I chose for today about side effects of medication in relation to unintended consequences, I had a similar thought to how this article from 26 years ago that touches on events from decades before relates to design as it currently stands. I think designers hold a lot of power in the outcome for users since a wrong or missing button can deter a user from accessing a potentially life changing tool in the same way that it can invite a completely new audience to use a website if its easy to use and helpful in delivering a solution. It also made me think about how the same design skills that can be used to create something helpful can also be used to influence, manipulate, or potentially harm people depending on the intention behind them. […]", "search": "all that you touch you change they may be too slight to matter or they may be worth the risk because the potential benefits are great, but the consequences are always there. in parable of the sower, my character put it this way: all that you touch / you change / all that you change / changes you. octavia e. butler a few rules for predicting the future linzhuo a classmate crystal they made a point about how the nazis recruited the best designers for their campaigns to create campaigns that appealed to people and helped attract support. […] the student also mentioned how designers today shape user experiences and therefore have a responsibility to consider how the choices they make can influence people and their actions. relating to the excerpt i chose for today about side effects of medication in relation to unintended consequences, i had a similar thought to how this article from 26 years ago that touches on events from decades before relates to design as it currently stands. i think designers hold a lot of power in the outcome for users since a wrong or missing button can deter a user from accessing a potentially life changing tool in the same way that it can invite a completely new audience to use a website if its easy to use and helpful in delivering a solution. it also made me think about how the same design skills that can be used to create something helpful can also be used to influence, manipulate, or potentially harm people depending on the intention behind them. […]", "note": {"said": "That we as designers have a soft influence on the future.", "text": "I completely agree because the question was posed how does design relate to this article- and this hidden/soft influence is really true and can been seen in real life situations. The usability of product can influence the decisions and therefore influence the future of an individual person. Since as designers we create products for a target audience at times, that decision actually affects a collection of similar users and can ripple down to our whole population’s future."}}, {"n": "11", "sec": 2, "title": "The AI war", "author": "Kate Crawford", "work": "Atlas of AI", "ex": "The rhetoric about the <strong>AI war<\/strong> between the United States and China drives the interests of the largest tech companies to operate with greater government support and few restrictions.", "exPlain": "The rhetoric about the AI war between the United States and China drives the interests of the largest tech companies to operate with greater government support and few restrictions.", "cite": "Crawford, Kate. <i>Atlas of AI: Power, Politics, and the Planetary Costs of Artificial Intelligence<\/i>. New Haven, CT: Yale University Press, 2021.", "url": null, "by": "Valerie", "spk": "Felix", "wk": "Week 9", "said": "They were responding to a question in what they disagreed in the book <i>Atlas of AI<\/i>. It was in the notion that companies providing job to the “third” world countries is then doing good and that if they were to take away those jobs than they are doing a disservice to this population.", "rsp": "Jonathan", "resp": "Maybe would have loved to hear more on such a nuanced topic but we should not act like western countries are doing these nations charity. They are exploiting cheaper land and a labor force in order to valorize their capital, a tale as old as time in the story of Western Imperialism.", "search": "the ai war the rhetoric about the ai war between the united states and china drives the interests of the largest tech companies to operate with greater government support and few restrictions. kate crawford atlas of ai valerie felix jonathan they were responding to a question in what they disagreed in the book atlas of ai. it was in the notion that companies providing job to the “third” world countries is then doing good and that if they were to take away those jobs than they are doing a disservice to this population. maybe would have loved to hear more on such a nuanced topic but we should not act like western countries are doing these nations charity. they are exploiting cheaper land and a labor force in order to valorize their capital, a tale as old as time in the story of western imperialism."}, {"n": "12", "sec": 2, "title": "More than you put in", "author": "Ted Chiang", "work": "Why A.I. Isn’t Going to Make Art", "ex": "The selling point of generative A.I. is that these programs <strong>generate vastly more than you put into them<\/strong>, and that is precisely what prevents them from being effective tools for artists.", "exPlain": "The selling point of generative A.I. is that these programs generate vastly more than you put into them, and that is precisely what prevents them from being effective tools for artists.", "cite": "Chiang, Ted. “Why A.I. Isn’t Going to Make Art.” <i>The New Yorker<\/i>, August 31, 2024.", "url": "https://www.newyorker.com/culture/the-weekend-essay/why-ai-isnt-going-to-make-art", "by": "Jasmine", "spk": "Juliette", "wk": "Week 9", "said": "An important trait in intelligent people is their ability to tolerate being stupid for a more extended period of time. If you can stand feeling stupid for eight hours a day and not go crazy, you could become a rocket scientist.", "rsp": "Valerie", "resp": "The essence of generative AI is to reduce the time it feels like an idiot by making the duration of the task as short as possible. If you create a 4000 word essay with a 100 word prompt, you didn’t have to risk feeling like an idiot for another 3900 words. The opportunity for growth was robbed from you. […] Intelligence and taste grows through active authorship, not just through passive, ego-free creation.", "search": "more than you put in the selling point of generative a.i. is that these programs generate vastly more than you put into them, and that is precisely what prevents them from being effective tools for artists. ted chiang why a.i. isn’t going to make art jasmine juliette valerie an important trait in intelligent people is their ability to tolerate being stupid for a more extended period of time. if you can stand feeling stupid for eight hours a day and not go crazy, you could become a rocket scientist. the essence of generative ai is to reduce the time it feels like an idiot by making the duration of the task as short as possible. if you create a 4000 word essay with a 100 word prompt, you didn’t have to risk feeling like an idiot for another 3900 words. the opportunity for growth was robbed from you. […] intelligence and taste grows through active authorship, not just through passive, ego-free creation."}, {"n": "13", "sec": 3, "title": "Less intention in the world", "author": "Ted Chiang", "work": "Why A.I. Isn’t Going to Make Art", "ex": "It <strong>reduces the amount of intention<\/strong> in the world.", "exPlain": "It reduces the amount of intention in the world.", "cite": "Chiang, Ted. “Why A.I. Isn’t Going to Make Art.” <i>The New Yorker<\/i>, August 31, 2024.", "url": "https://www.newyorker.com/culture/the-weekend-essay/why-ai-isnt-going-to-make-art", "by": "Andrea", "spk": "Andrew", "wk": "Week 8", "said": "He asked me how can a designer make the right decision when they are working on an ai tool.", "rsp": "Andrea", "resp": "I wasn’t able to answer that question on the spot, but when Andrew gave the example of how Muse uses a cute mascot as an assistant to make users feel more comfortable sharing their personal information, it made me really think about it and raised an ethical question: are we creating experiences that genuinely help users, or are we using design to influence them for the company’s benefit? The design might make users feel more at ease, but it could benefit the company more than the users themselves. […] I always blamed the company and not the designers. It made me realize that designers need to consider not only what an AI tool can do, but also who it benefits and how it can influence people.", "search": "less intention in the world it reduces the amount of intention in the world. ted chiang why a.i. isn’t going to make art andrea andrew andrea he asked me how can a designer make the right decision when they are working on an ai tool. i wasn’t able to answer that question on the spot, but when andrew gave the example of how muse uses a cute mascot as an assistant to make users feel more comfortable sharing their personal information, it made me really think about it and raised an ethical question: are we creating experiences that genuinely help users, or are we using design to influence them for the company’s benefit? the design might make users feel more at ease, but it could benefit the company more than the users themselves. […] i always blamed the company and not the designers. it made me realize that designers need to consider not only what an ai tool can do, but also who it benefits and how it can influence people."}, {"n": "14", "sec": 3, "title": "A slogan, not a fact", "author": "Even Realities", "work": "The Big Dance", "ex": "It replaces tasks, not people. <strong>That’s a slogan, not a fact.<\/strong> The future isn’t something that AI decides. It’s something that we do. You say that like AI’s rise is inevitable, like it’s gravity, but it’s not. It’s a choice made by companies like yours.", "exPlain": "It replaces tasks, not people. That’s a slogan, not a fact. The future isn’t something that AI decides. It’s something that we do. You say that like AI’s rise is inevitable, like it’s gravity, but it’s not. It’s a choice made by companies like yours.", "cite": "Even Realities. “Even Realities Presents: The Big Dance.” YouTube, March 26, 2026.", "url": "https://www.youtube.com/watch?v=DD5-hGUDF7c", "by": "Natay", "spk": "Jonathan", "wk": "Week 6", "said": "The industry of AI is still being defined, and pricing and access to the technologies will change over time. The point of giving full access right now is to get the general public comfortable with the concept and to get more information from them.", "rsp": "Leila", "resp": "I think this is a very interesting take, because it is true that the general public has access to so many AI technologies right now, and that may become more limited in the future, or need to be paid for. However either way, with AI, humans should take control of the machine rather than the other way around, and choose selectively what we are handing off versus what we are doing ourselves.", "search": "a slogan, not a fact it replaces tasks, not people. that’s a slogan, not a fact. the future isn’t something that ai decides. it’s something that we do. you say that like ai’s rise is inevitable, like it’s gravity, but it’s not. it’s a choice made by companies like yours. even realities the big dance natay jonathan leila the industry of ai is still being defined, and pricing and access to the technologies will change over time. the point of giving full access right now is to get the general public comfortable with the concept and to get more information from them. i think this is a very interesting take, because it is true that the general public has access to so many ai technologies right now, and that may become more limited in the future, or need to be paid for. however either way, with ai, humans should take control of the machine rather than the other way around, and choose selectively what we are handing off versus what we are doing ourselves."}, {"n": "15", "sec": 3, "title": "Our tools shape us", "author": "James Bridle", "work": "Ways of Being", "ex": "In the words often attributed to Marshall McLuhan (but more properly ascribed to Winston Churchill): ‘<strong>we shape our tools, and thereafter our tools shape us.<\/strong>’ We are the technology of our tools: they shape and form us.", "exPlain": "In the words often attributed to Marshall McLuhan (but more properly ascribed to Winston Churchill): ‘we shape our tools, and thereafter our tools shape us.’ We are the technology of our tools: they shape and form us.", "cite": "Bridle, James. <i>Ways of Being: Animals, Plants, Machines: The Search for a Planetary Intelligence<\/i>. New York: Farrar, Straus and Giroux, 2022, 18.", "url": null, "by": "Felix", "spk": "Andrew & Juliette", "wk": "Week 8", "said": "About having a humanistic perspective when it comes to design.", "rsp": "Hyunjin", "resp": "I wonder if design can be humanistic without being anthropocentric. Does prioritizing human needs necessarily mean putting humans at the center of everything? I think being humanistic can also mean recognizing our relationship with other species and the environment.", "search": "our tools shape us in the words often attributed to marshall mcluhan (but more properly ascribed to winston churchill): ‘we shape our tools, and thereafter our tools shape us.’ we are the technology of our tools: they shape and form us. james bridle ways of being felix andrew & juliette hyunjin about having a humanistic perspective when it comes to design. i wonder if design can be humanistic without being anthropocentric. does prioritizing human needs necessarily mean putting humans at the center of everything? i think being humanistic can also mean recognizing our relationship with other species and the environment."}];
+  var SECS = [{"num": "01", "title": "We Shape Our Tools", "focus": "Human intention, creativity, and the act of designing", "part": "We shape the tools", "note": ""}, {"num": "02", "title": "Our Tools Shape Us", "focus": "Interfaces, attention, behavior, and emotional connection", "part": "The tools shape us back", "note": ""}, {"num": "03", "title": "The Systems Behind the Screen", "focus": "AI, incentives, power, and unintended consequences", "part": "The systems around both", "note": ""}, {"num": "04", "title": "Who Is Responsible?", "focus": "Agency, authorship, and the designer's role", "part": "Our role as designers", "note": ""}];
+  var state = { view: "board", sec: "all", q: "", notes: false };
+  var $ = function (id) { return document.getElementById(id); };
+  var views = $("views"), count = $("count");
+
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function initials(n) { return n.split(/\s|&/).filter(Boolean).map(function (w) { return w[0]; }).slice(0, 2).join("").toUpperCase(); }
+  function filtered() {
+    var q = state.q.trim().toLowerCase();
+    return DATA.filter(function (d) {
+      return (state.sec === "all" || String(d.sec) === state.sec) && (!q || d.search.indexOf(q) > -1);
+    });
+  }
+  function tag(si) { return '<span class="tag t' + si + '">' + SECS[si].num + " " + esc(SECS[si].title) + "</span>"; }
+
+  function card(d) {
+    return '<button class="card" type="button" data-n="' + d.n + '">' +
+      '<span class="card-title"><span class="no">' + d.n + "</span>" + esc(d.title) + "</span>" +
+      '<span class="card-snip">' + esc(d.exPlain) + "</span>" +
+      '<span class="card-props"><span class="chip">' + esc(d.author) + "</span></span>" +
+      '<span class="who">Chosen by <b>' + esc(d.by) + "</b> · <b>" + esc(d.spk) + "</b> → <b>" + esc(d.rsp) + "</b></span>" +
+      (d.note ? '<span class="has-note">+ My note</span>' : "") +
+      "</button>";
+  }
+  function render() {
+    var list = filtered();
+    count.textContent = list.length + (list.length === 1 ? " entry" : " entries");
+    var wide = state.view === "board";
+    $("db").classList.toggle("db-wide", wide);
+    if (state.view === "board") {
+      var cols = SECS.map(function (s, si) { return si; }).filter(function (si) { return state.sec === "all" || String(si) === state.sec; });
+      var h = '<div class="board-wrap"><div class="board" style="--cols:' + cols.length + '">';
+      cols.forEach(function (si) {
+        var items = list.filter(function (d) { return d.sec === si; });
+        h += '<div class="col"><div class="col-head">' + tag(si) + '<span class="n">' + items.length + "</span></div>" +
+             '<p class="col-focus">' + esc(SECS[si].focus) + "</p>" +
+             (SECS[si].note ? '<details class="note"' + (state.notes ? " open" : "") + '><summary><span class="tri" aria-hidden="true">▶</span>From the essay<span class="k">· ' + esc(SECS[si].part) + "</span></summary><p>" + SECS[si].note + "</p></details>" : "") +
+             '<div class="cards">' +
+             (items.length ? items.map(card).join("") : '<p class="empty">No matching entries</p>') + "</div></div>";
+      });
+      views.innerHTML = h + "</div></div>";
+    } else {
+      var t = '<div class="table-wrap"><table><thead><tr><th>No.</th><th>Title</th><th>Section</th><th>Source</th><th>Chosen by</th><th>Comment</th><th>Response</th><th>Week</th></tr></thead><tbody>';
+      list.forEach(function (d) {
+        t += '<tr data-n="' + d.n + '" tabindex="0"><td class="num">' + d.n + '</td><td class="tt">' + esc(d.title) + "</td><td>" + tag(d.sec) +
+             "</td><td>" + esc(d.author) + ", <i>" + esc(d.work) + "</i></td><td>" + esc(d.by) + "</td><td>" + esc(d.spk) + "</td><td>" + esc(d.rsp) + "</td><td>" + esc(d.wk) + "</td></tr>";
+      });
+      if (!list.length) t += '<tr><td colspan="8" class="empty">No matching entries</td></tr>';
+      views.innerHTML = t + "</tbody></table></div>";
+    }
+  }
+
+  // ---------- side peek ----------
+  var peek = $("peek"), scrim = $("scrim"), body = $("pk-body"), current = null, lastFocus = null;
+  function openEntry(n, push) {
+    var d = DATA.filter(function (x) { return x.n === n; })[0]; if (!d) return;
+    current = d;
+    var src = d.url ? ' <a href="' + esc(d.url) + '" target="_blank" rel="noopener">Open source ↗</a>' : "";
+    body.innerHTML =
+      '<h2 id="pk-title"><span class="no">' + d.n + "</span>" + esc(d.title) + "</h2>" +
+      '<dl class="props">' +
+        "<dt>Section</dt><dd>" + tag(d.sec) + "</dd>" +
+        "<dt>Source</dt><dd>" + esc(d.author) + ", <i>" + esc(d.work) + "</i></dd>" +
+        "<dt>Chosen by</dt><dd><span class=\"chip\">" + esc(d.by) + "</span></dd>" +
+        "<dt>Exchange</dt><dd><span class=\"chip\">" + esc(d.spk) + "</span> → <span class=\"chip\">" + esc(d.rsp) + "</span> · " + esc(d.wk) + "</dd>" +
+      "</dl>" +
+      '<blockquote class="quote">' + d.ex + "</blockquote>" +
+      '<p class="cite">' + d.cite + src + "</p>" +
+      "<h3>The exchange</h3>" +
+      '<div class="msg said"><span class="av">' + esc(initials(d.spk)) + '</span><div><div class="who2">' + esc(d.spk) + "<span>original comment · " + esc(d.wk) + "</span></div><p>" + d.said + "</p></div></div>" +
+      '<div class="msg"><span class="av r">' + esc(initials(d.rsp)) + '</span><div><div class="who2">' + esc(d.rsp) + "<span>response</span></div><p>" + d.resp + "</p></div></div>" +
+      (d.note ? '<div class="mynote" id="pk-note"><h3>My note</h3><p class="mn-k">My own microresponse from the same Week 1 discussion. It is cited in the framing essay and is not one of the 15 peer responses.</p>' +
+        '<div class="msg said"><span class="av">C</span><div><div class="who2">A classmate<span>original comment · Week 1</span></div><p>' + esc(d.note.said) + "</p></div></div>" +
+        '<div class="msg"><span class="av me">S</span><div><div class="who2">Simrin<span>my response</span></div><p>' + esc(d.note.text) + "</p></div></div></div>" : "");
+    var i = DATA.indexOf(d);
+    $("pk-prev").disabled = i === 0; $("pk-next").disabled = i === DATA.length - 1;
+    $("pk-pos").textContent = d.n + " of 15";
+    if (peek.hidden) { lastFocus = document.activeElement; peek.hidden = false; scrim.hidden = false; document.body.style.overflow = "hidden"; }
+    body.scrollTop = 0;
+    $("pk-close").focus();
+    if (push !== false && location.hash !== "#entry-" + d.n) location.hash = "entry-" + d.n;
+  }
+  function closePeek() {
+    if (peek.hidden) return;
+    peek.hidden = true; scrim.hidden = true; document.body.style.overflow = ""; current = null;
+    if (/^#entry-/.test(location.hash)) { try { history.replaceState(null, "", location.pathname + location.search); } catch (e) { location.hash = ""; } }
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+  function step(k) { if (!current) return; var i = DATA.indexOf(current) + k; if (DATA[i]) openEntry(DATA[i].n); }
+  $("pk-close").addEventListener("click", closePeek);
+  scrim.addEventListener("click", closePeek);
+  $("pk-prev").addEventListener("click", function () { step(-1); });
+  $("pk-next").addEventListener("click", function () { step(1); });
+  document.addEventListener("keydown", function (e) {
+    if (peek.hidden) return;
+    if (e.key === "Escape") closePeek();
+    if (e.key === "ArrowDown" || e.key === "j") { e.preventDefault(); step(1); }
+    if (e.key === "ArrowUp" || e.key === "k") { e.preventDefault(); step(-1); }
+  });
+  function fromHash() { var m = /^#entry-(\d\d)$/.exec(location.hash); if (m) openEntry(m[1], false); else closePeek(); }
+  addEventListener("hashchange", fromHash);
+
+  views.addEventListener("click", function (e) { var el = e.target.closest("[data-n]"); if (el) openEntry(el.dataset.n); });
+  views.addEventListener("keydown", function (e) { if (e.key === "Enter") { var el = e.target.closest("tr[data-n]"); if (el) openEntry(el.dataset.n); } });
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest && e.target.closest("a.ref");
+    if (a) { e.preventDefault(); e.stopPropagation(); openEntry(a.getAttribute("href").slice(7));
+      if (a.hasAttribute("data-note")) { setTimeout(function () { var nt = document.getElementById("pk-note"); if (nt) nt.scrollIntoView({ block: "start" }); }, 80); } }
+  }, true);
+  views.addEventListener("toggle", function (e) { if (e.target.classList && e.target.classList.contains("note")) state.notes = e.target.open; }, true);
+
+  // ---------- controls ----------
+  document.querySelectorAll("[data-view]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      state.view = b.dataset.view;
+      document.querySelectorAll("[data-view]").forEach(function (x) { x.setAttribute("aria-pressed", String(x === b)); });
+      try { localStorage.setItem("widw-view", state.view); } catch (e) {}
+      render();
+    });
+  });
+  $("f-sec").addEventListener("change", function () { state.sec = this.value; render(); });
+  $("f-q").addEventListener("input", function () { state.q = this.value; render(); });
+  try { var v = localStorage.getItem("widw-view"); if (v === "table") document.querySelector('[data-view="table"]').click(); } catch (e) {}
+
+  // ---------- the loop ----------
+  (function () {
+    var cv = document.getElementById("lp-canvas"); if (!cv) return;
+    var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var ctx = cv.getContext("2d");
+    var W = { scroll: 0.20, auto: 0.20, badge: 0.15, feed: 0.25 };
+    var NAMES = { scroll: "infinite scroll", auto: "autoplay", badge: "red badges", feed: "an engagement-ranked feed" };
+    var on = { scroll: false, auto: false, badge: false, feed: false };
+    var pushes = 0, N = 120, people = [], shown = 0.10, lastAsk = 0, askFor = null, prevShare = 0.10;
+    function share() { var s = 0.10; for (var k in on) if (on[k]) s += W[k]; return Math.min(0.9, s); }
+    function seed() {
+      people = [];
+      for (var i = 0; i < N; i++) people.push({ x: 0.03 + Math.random() * 0.4, y: 0.16 + Math.random() * 0.78, vx: (Math.random() - 0.5) * 0.002, vy: (Math.random() - 0.5) * 0.002, t: (i + Math.random()) / N, a: 0 });
+      people.forEach(function (p, i) { p.rank = i; });
+    }
+    function size() { var r = cv.getBoundingClientRect(), d = window.devicePixelRatio || 1; cv.width = Math.max(1, r.width * d); cv.height = Math.max(1, r.height * d); ctx.setTransform(d, 0, 0, d, 0, 0); }
+    function col(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || "#999"; }
+    function draw() {
+      var r = cv.getBoundingClientRect(), w = r.width, h = r.height;
+      ctx.clearRect(0, 0, w, h);
+      var cA = col("--red"), cB = col("--faint");
+      var COLS = 12, ROWS = 10, gx0 = 0.54, gx1 = 0.97, gy0 = 0.18, gy1 = 0.94;
+      // divider between the two zones
+      ctx.strokeStyle = col("--line"); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(w * 0.495, h * 0.14); ctx.lineTo(w * 0.495, h * 0.97); ctx.stroke();
+      people.forEach(function (p) {
+        var auto = p.t < shown;
+        p.a += ((auto ? 1 : 0) - p.a) * (reduce ? 1 : 0.06);
+        if (auto) {
+          var c = p.rank % COLS, r = Math.floor(p.rank / COLS);
+          var tx = gx0 + (gx1 - gx0) * (c + 0.5) / COLS, ty = gy1 - (gy1 - gy0) * (r + 0.5) / ROWS;
+          if (reduce) { p.x = tx; p.y = ty; } else { p.x += (tx - p.x) * 0.06; p.y += (ty - p.y) * 0.06; }
+          p.vx = 0; p.vy = 0;
+        } else if (!reduce) {
+          p.vx += (Math.random() - 0.5) * 0.0006; p.vy += (Math.random() - 0.5) * 0.0006;
+          if (p.x > 0.46) p.vx -= 0.0012;
+          p.vx *= 0.96; p.vy *= 0.96; p.x += p.vx; p.y += p.vy;
+          if (p.x < 0.02) p.vx = Math.abs(p.vx); if (p.y < 0.16 || p.y > 0.96) p.vy *= -1;
+          p.x = Math.max(0.02, p.x); p.y = Math.min(0.96, Math.max(0.16, p.y));
+        } else if (p.x > 0.46) { p.x = 0.03 + Math.random() * 0.4; }
+        ctx.beginPath(); ctx.arc(p.x * w, p.y * h, 3.6, 0, Math.PI * 2);
+        ctx.fillStyle = p.a > 0.5 ? cA : cB; ctx.globalAlpha = 0.35 + 0.65 * Math.abs(p.a - 0.5) * 2; ctx.fill();
+      });
+      ctx.globalAlpha = 1;
+    }
+    function stats() {
+      var k = people.filter(function (p) { return p.t < shown; }).length;
+      document.getElementById("st-auto").textContent = k + " of " + N;
+      document.getElementById("st-time").textContent = Math.round(14 + shown * 80) + " min";
+      document.getElementById("st-push").textContent = pushes;
+    }
+    var ringTimer = null;
+    function ring() {
+      var sts = document.querySelectorAll(".ring .st"), i = 0;
+      clearInterval(ringTimer);
+      var step = function () { sts.forEach(function (s) { s.classList.toggle("on", +s.dataset.st === i); }); i++; if (i > 4) { clearInterval(ringTimer); setTimeout(function () { sts.forEach(function (s) { s.classList.remove("on"); }); }, 900); } };
+      step(); ringTimer = setInterval(step, reduce ? 300 : 650);
+    }
+    function maybeAsk() {
+      var off = Object.keys(on).filter(function (k) { return !on[k]; });
+      var box = document.getElementById("ask");
+      if (!off.length || share() <= prevShare) { box.hidden = true; return; }
+      askFor = off[Math.floor(Math.random() * off.length)];
+      var lift = Math.round((share() - 0.10) * 100);
+      document.getElementById("ask-text").textContent = "Autopilot use is up " + lift + " points and time in the app is climbing. Can we add " + NAMES[askFor] + " this sprint?";
+      box.hidden = false;
+      var sw = document.getElementById("sw-" + askFor); sw.classList.remove("ask"); void sw.offsetWidth; sw.classList.add("ask");
+    }
+    function changed() { var s = share(); ring(); setTimeout(maybeAsk, reduce ? 300 : 2600); prevShare = s; }
+    document.querySelectorAll(".sw input").forEach(function (inp) {
+      inp.addEventListener("change", function () { var before = share(); on[inp.dataset.f] = inp.checked; prevShare = before; ring(); document.getElementById("ask").hidden = true; setTimeout(maybeAsk, reduce ? 300 : 2600); });
+    });
+    document.getElementById("ask-yes").addEventListener("click", function () {
+      if (!askFor) return; var inp = document.querySelector('.sw input[data-f="' + askFor + '"]'); inp.checked = true; prevShare = share(); on[askFor] = true; document.getElementById("ask").hidden = true; ring(); setTimeout(maybeAsk, reduce ? 300 : 2600);
+    });
+    document.getElementById("ask-no").addEventListener("click", function () { pushes++; stats(); document.getElementById("ask").hidden = true; });
+    document.getElementById("lp-reset").addEventListener("click", function () {
+      for (var k in on) on[k] = false; document.querySelectorAll(".sw input").forEach(function (i) { i.checked = false; });
+      pushes = 0; prevShare = 0.10; document.getElementById("ask").hidden = true; seed(); stats();
+    });
+    function tick() { shown += (share() - shown) * (reduce ? 1 : 0.02); stats(); draw(); requestAnimationFrame(tick); }
+    seed(); size(); addEventListener("resize", size); stats(); draw(); requestAnimationFrame(tick);
+  })();
+
+  render();
+  fromHash();
+})();
+</script>
+
+</body></html>
